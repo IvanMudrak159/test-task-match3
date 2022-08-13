@@ -10,7 +10,6 @@
           <e p="LevelController.cs" t="Include" />
           <e p="LevelModel.cs" t="Include" />
           <e p="LevelView.cs" t="Include" />
-          <e p="Row.cs" t="Include" />
           <e p="Tile.cs" t="Include" />
         </e>
       </e>

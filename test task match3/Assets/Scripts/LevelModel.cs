@@ -34,21 +34,16 @@ public class LevelModel
         OnFieldGenerated?.Invoke(_field);
     }
 
-    private void ChangePosition()
+    public void ChangePosition(Vector2 firstPosition, Vector2 secondPosition)
     {
+        Vector2Int firstPos = new Vector2Int((int) firstPosition.x, (int) firstPosition.y);
+        Vector2Int secondPos = new Vector2Int((int) secondPosition.x, (int) secondPosition.y);
         
+        int tempValue = _field[firstPos.x, firstPos.y];
+        _field[firstPos.x, firstPos.y] = _field[secondPos.x, secondPos.y];
+        _field[secondPos.x, secondPos.y] = tempValue;
     }
-
-    private void FindMatch()
-    {
-        
-    }
-
-    private void FindAllMatches()
-    {
-        //Dunno if it will be used
-    }
-
+    
     private void DestroyTiles()
     {
         
