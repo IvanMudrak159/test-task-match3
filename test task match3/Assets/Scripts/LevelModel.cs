@@ -2,23 +2,15 @@ using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class LevelModel: MonoBehaviour
+public class LevelModel
 {
-    public int width, height = 9;
-    public int iconLength = 7;
+    private int[,] _field;
     private int[] _icons;
     
-    private int[,] _field;
-
     public delegate void FieldGenerated(int[,] field);
     public event FieldGenerated OnFieldGenerated;
     
-    private void Start()
-    {
-        GenerateField();
-    }
-
-    private void GenerateField()
+    public void GenerateField(int width, int height, int iconLength)
     {
         _icons = Enumerable.Range(0, iconLength).ToArray();
         int previousLeft = -1;
