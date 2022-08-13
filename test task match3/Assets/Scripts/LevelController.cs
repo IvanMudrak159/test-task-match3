@@ -10,12 +10,12 @@ public class LevelController : MonoBehaviour
 
    private void OnEnable()
    {
-      model.onFieldGenerated += view.GenerateField;
+      model.OnFieldGenerated += view.GenerateField;
    }
 
    private void OnDisable()
    {
-      model.onFieldGenerated -= view.GenerateField;
+      model.OnFieldGenerated -= view.GenerateField;
    }
 
    private void GetSwap()
