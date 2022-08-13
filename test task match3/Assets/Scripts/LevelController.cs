@@ -6,8 +6,6 @@ public class LevelController : MonoBehaviour
    
    [SerializeField] private int width, height;
    [SerializeField] private Tile tilePrefab;
-   [SerializeField] private SpriteRenderer backGroundImage;
-   public Sprite[] iconSprites;
    private Tile[,] _tiles;
    
    private Tile _selectedTile = null;
@@ -38,43 +36,27 @@ public class LevelController : MonoBehaviour
 
    private void Start()
    {
-      OnGameStart?.Invoke(width, height, iconSprites.Length);
+      OnGameStart?.Invoke(width, height, view.IconSpritesLength);
    }
 
    private void GenerateField(int[,] field)
    {
       _tiles = new Tile[width, height];
-        
-      float startX = transform.position.x;
-      float startY = transform.position.y;
-      Vector2 offset = tilePrefab.tile.bounds.size;
-      Debug.Log(offset);
+      
       for (int y = 0; y < height; y++)
       {
          for (int x = 0; x < width; x++)
          {
-            Tile newTile = Instantiate(tilePrefab.gameObject, 
-               new Vector3(startX + offset.x * x, startY + offset.y * y, 0), 
-               Quaternion.identity).GetComponent<Tile>();
+            Tile newTile = Instantiate(tilePrefab.gameObject).GetComponent<Tile>();
 
             newTile.tileSelected += GetSwap;
-            newTile.transform.parent = transform;
             _tiles[y, x] = newTile;
          }
       }
-      FillTileArray(field);
+      view.SetTilesPosition(_tiles);
+      view.SetTilesSprite(field);
    }
-    
-   private void FillTileArray(int[,] field)
-   {
-      for (int x = 0; x < width; x++)
-      {
-         for (int y = 0; y < height; y++)
-         {
-            _tiles[x, y].icon.sprite = iconSprites[field[x,y]];
-         }
-      }
-   }
+   
 
    private void GetSwap(Tile tile, Vector2 tilePosition)
    {
@@ -89,20 +71,14 @@ public class LevelController : MonoBehaviour
       }
       else
       {
+         view.ChangePosition(_selectedTile.transform ,tile.transform);
+         model.ChangePosition(_selectedTilePosition, tilePosition);
+         
          _selectedTile.UpdateInfo();
          tile.UpdateInfo();
-         
-         ChangePosition(_selectedTile.transform ,tile.transform);
-         model.ChangePosition(_selectedTilePosition, tilePosition);
+
          _selectedTile = null;
       }
-   }
-   
-   private void ChangePosition(Transform firstTile, Transform secondTile)
-   {
-      Vector2 tempPos = firstTile.position;
-      firstTile.position = secondTile.position;
-      secondTile.position = tempPos;
    }
 
    private void DestroyTiles()
@@ -111,11 +87,6 @@ public class LevelController : MonoBehaviour
    }
 
    private void GenerateTiles()
-   {
-        
-   }
-
-   private void UpdateScore()
    {
         
    }
