@@ -1,13 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
+using System.Text;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelView : MonoBehaviour
 {
     private Tile[,] _tiles;
     [SerializeField] private int width, height;
     [SerializeField] private Sprite[] iconSprites;
+
+    [SerializeField] private Text scoreText;
+    private int _scoreCount;
     
     public delegate void GameStartedEvent(int width, int height, int iconLength);
     public event GameStartedEvent GameStarted;
@@ -73,8 +77,9 @@ public class LevelView : MonoBehaviour
         }
     }
 
-    private void UpdateScore()
+    public void UpdateScore(List<Vector2Int> matchingTiles)
     {
-        
+        _scoreCount += matchingTiles.Count * 100;
+        scoreText.text = "Score: " + _scoreCount;
     }
 }

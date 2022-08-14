@@ -39,7 +39,6 @@ public class LevelModel
                 previousBelow[x] = _field[y, x];
             }
         }
-        PrintField();
         fieldGenerated?.Invoke(_field, _width, _height);
     }
 

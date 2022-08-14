@@ -24,6 +24,7 @@ public class LevelController : MonoBehaviour
       view.GameStarted += model.GenerateField;
       model.fieldGenerated += OnFieldGenerated;
       model.matchFound += view.DestroyTiles;
+      model.matchFound += view.UpdateScore;
    }
 
    private void OnDisable()
@@ -31,6 +32,7 @@ public class LevelController : MonoBehaviour
       view.GameStarted -= model.GenerateField;
       model.fieldGenerated -= OnFieldGenerated;
       model.matchFound -= view.DestroyTiles;
+      model.matchFound -= view.UpdateScore;
    }
    
    private void OnFieldGenerated(int[,] field, int width, int height)
@@ -72,8 +74,6 @@ public class LevelController : MonoBehaviour
             
             if (!foundMatch)
             {
-               Debug.Log("no match in this field");
-
                view.ChangePosition(_selectedTile ,tile);
                model.ChangePosition(_selectedTile.Position, tile.Position);
             }
