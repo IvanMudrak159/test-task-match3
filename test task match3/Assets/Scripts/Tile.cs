@@ -7,9 +7,11 @@ public class Tile : MonoBehaviour
    public SpriteRenderer tile;
    private static Color selectedColor = new Color(.5f, .5f, .5f, 1.0f);
    private bool _isSelected;
-   private Vector2 _position;
 
-   public delegate void TileSelected(Tile tile, Vector2 position);
+   private Vector2Int _position;
+   public Vector2Int Position => _position;
+
+   public delegate void TileSelected(Tile tile);
 
    public event TileSelected tileSelected;
    private void Start()
@@ -22,7 +24,7 @@ public class Tile : MonoBehaviour
    {
       _isSelected = true;
       icon.color = selectedColor;
-      tileSelected?.Invoke(this, _position);
+      tileSelected?.Invoke(this);
    }
    
    private void Deselect()
@@ -34,8 +36,8 @@ public class Tile : MonoBehaviour
    private void CalculatePosition()
    {
       Vector2 offset = tile.bounds.size;
-      _position = new Vector2(transform.localPosition.y / offset.y,
-         transform.localPosition.x / offset.x);
+      _position = new Vector2Int((int) (transform.localPosition.y / offset.y),
+         (int) (transform.localPosition.x / offset.x));
    }
    
    public void UpdateInfo()
@@ -54,5 +56,6 @@ public class Tile : MonoBehaviour
       {
          Select();
       }
+      Debug.Log(Position);
    }
 }
