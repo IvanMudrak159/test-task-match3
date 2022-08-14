@@ -14,6 +14,7 @@ public class Tile : MonoBehaviour
    public event TileSelected tileSelected;
    private void Start()
    {
+      //fix later: can be called before LevelView exe SetTilesPosition()
       CalculatePosition();
    }
 
@@ -33,8 +34,8 @@ public class Tile : MonoBehaviour
    private void CalculatePosition()
    {
       Vector2 offset = tile.bounds.size;
-      _position = new Vector2((int)(transform.localPosition.y / offset.y),
-         (int)(transform.localPosition.x / offset.x));
+      _position = new Vector2(transform.localPosition.y / offset.y,
+         transform.localPosition.x / offset.x);
    }
    
    public void UpdateInfo()
@@ -53,7 +54,5 @@ public class Tile : MonoBehaviour
       {
          Select();
       }
-      
-      Debug.Log(_position);
    }
 }

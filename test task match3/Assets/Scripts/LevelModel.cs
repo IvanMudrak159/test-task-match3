@@ -27,7 +27,6 @@ public class LevelModel
 
                 previousLeft = _field[x, y];
                 previousBelow[y] = _field[x, y];
-
             }
         }
 

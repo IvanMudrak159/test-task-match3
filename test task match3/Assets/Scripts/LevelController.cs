@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelController : MonoBehaviour
 {
@@ -17,9 +18,11 @@ public class LevelController : MonoBehaviour
    public delegate void GameStarted(int width, int height, int iconLength);
    public event GameStarted OnGameStart;
 
+   private Vector2[] _directions;
    private void Awake()
    {
       model = new LevelModel();
+      _directions = new[] {Vector2.down, Vector2.left, Vector2.right, Vector2.up};
    }
 
    private void OnEnable()
@@ -47,18 +50,17 @@ public class LevelController : MonoBehaviour
       {
          for (int x = 0; x < width; x++)
          {
-            Tile newTile = Instantiate(tilePrefab.gameObject).GetComponent<Tile>();
-
-            newTile.tileSelected += GetSwap;
+            Tile newTile = Instantiate(tilePrefab);
+            
+            newTile.tileSelected += SwapTiles;
             _tiles[y, x] = newTile;
          }
       }
       view.SetTilesPosition(_tiles);
       view.SetTilesSprite(field);
    }
-   
 
-   private void GetSwap(Tile tile, Vector2 tilePosition)
+   private void SwapTiles(Tile tile, Vector2 tilePosition)
    {
       if (_selectedTile == tile)
       {
@@ -71,9 +73,21 @@ public class LevelController : MonoBehaviour
       }
       else
       {
-         view.ChangePosition(_selectedTile.transform ,tile.transform);
-         model.ChangePosition(_selectedTilePosition, tilePosition);
-         
+         bool isAdjacent = false;
+         foreach (var direction in _directions)
+         {
+            if (direction == _selectedTilePosition - tilePosition)
+            {
+               isAdjacent = true;
+               break;
+            }
+         }
+
+         if (isAdjacent)
+         {
+            view.ChangePosition(_selectedTile.transform ,tile.transform);
+            model.ChangePosition(_selectedTilePosition, tilePosition);
+         }
          _selectedTile.UpdateInfo();
          tile.UpdateInfo();
 

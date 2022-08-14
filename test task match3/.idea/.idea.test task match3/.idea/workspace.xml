@@ -20,12 +20,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="05ab0917-d6ee-4fbd-9317-3616fbd4a415" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.test task match3/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.test task match3/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.test task match3/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.test task match3/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/LevelController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/LevelController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/LevelModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/LevelModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/LevelView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/LevelView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sprites/characters_0007.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Tile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Tile.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,9 +49,10 @@
         <option value="$PROJECT_DIR$/Assets/Prefabs/Tile.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/test.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/LevelModel.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/LevelView.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Directions.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Tile.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/LevelController.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/LevelView.cs" />
       </list>
     </option>
   </component>
@@ -92,7 +93,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1660372625490</updated>
-      <workItem from="1660372637138" duration="31680000" />
+      <workItem from="1660372637138" duration="31973000" />
+      <workItem from="1660462966556" duration="2324000" />
     </task>
     <servers />
   </component>
@@ -108,6 +110,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
