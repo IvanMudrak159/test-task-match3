@@ -99,6 +99,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 5779873432605690604}
   tile: {fileID: 3213194282630668364}
+  _position: {x: 0, y: 0}
+  Position: {x: -1, y: -1}
 --- !u!61 &6613701292559929350
 BoxCollider2D:
   m_ObjectHideFlags: 0

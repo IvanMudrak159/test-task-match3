@@ -8,7 +8,7 @@ public class Tile : MonoBehaviour
    private static Color selectedColor = new Color(.5f, .5f, .5f, 1.0f);
    private bool _isSelected;
 
-   private Vector2Int _position;
+   [SerializeField] private Vector2Int _position;
    public Vector2Int Position => _position;
 
    public delegate void TileSelected(Tile tile);
@@ -22,6 +22,7 @@ public class Tile : MonoBehaviour
 
    private void Select()
    {
+      CalculatePosition();
       _isSelected = true;
       icon.color = selectedColor;
       tileSelected?.Invoke(this);
@@ -36,8 +37,11 @@ public class Tile : MonoBehaviour
    private void CalculatePosition()
    {
       Vector2 offset = tile.bounds.size;
-      _position = new Vector2Int((int) (transform.localPosition.y / offset.y),
-         (int) (transform.localPosition.x / offset.x));
+
+      float x = transform.localPosition.x / offset.x;
+      float y = transform.localPosition.y / offset.y;
+
+      _position = new Vector2Int((int)x, (int)y);
    }
    
    public void UpdateInfo()
@@ -56,6 +60,5 @@ public class Tile : MonoBehaviour
       {
          Select();
       }
-      Debug.Log(Position);
    }
 }

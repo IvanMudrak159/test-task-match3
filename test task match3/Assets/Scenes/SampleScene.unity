@@ -153,8 +153,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255b4fb1f5504374cbff2d0e7016da19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 4
-  height: 6
+  width: 9
+  height: 9
   iconSprites:
   - {fileID: 21300000, guid: c05ad4788e5e59640abffc65f7389b72, type: 3}
   - {fileID: 21300000, guid: 9cb83d93843669549a193c7686bc01e0, type: 3}

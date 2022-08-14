@@ -20,30 +20,30 @@ public class LevelView : MonoBehaviour
     public void SetTilesPosition(Tile[,] tiles)
     {
         _tiles = tiles;
-        width = _tiles.GetLength(0);
-        height = _tiles.GetLength(1);
+        height = _tiles.GetLength(0);
+        width = _tiles.GetLength(1);
 
         float startX = transform.position.x;
         float startY = transform.position.y;
         Vector2 offset = _tiles[0,0].tile.bounds.size;
 
-        for (int x = 0; x < width; x++)
+        for (int y = 0; y < height; y++)
         {
-            for (int y = 0; y < height; y++)
+            for (int x = 0; x < width; x++)
             {
-                _tiles[x, y].transform.position = new Vector3(startX + offset.x * x, startY + offset.y * y, 0);
-                _tiles[x, y].transform.parent = transform;
+                _tiles[y, x].transform.position = new Vector3(startX + offset.x * x, startY + offset.y * y, 0);
+                _tiles[y, x].transform.parent = transform;
             }
         }
     }
     
     public void SetTilesSprite(int[,] field)
     {
-        for (int x = 0; x < width; x++)
+        for (int y = 0; y < height; y++)
         {
-            for (int y = 0; y < height; y++)
+            for (int x = 0; x < width; x++)
             {
-                _tiles[x, y].icon.sprite = iconSprites[field[x,y]];
+                _tiles[y, x].icon.sprite = iconSprites[field[y, x]];
             }
         }
     }
@@ -58,16 +58,18 @@ public class LevelView : MonoBehaviour
         Tile tempTile = firstTile;
         Vector2Int firstPos = firstTile.Position;
         Vector2Int secondPos = secondTile.Position;
-        _tiles[firstPos.x, firstPos.y] = _tiles[secondPos.x, secondPos.y];
-        _tiles[secondPos.x, secondPos.y] = tempTile;
+        _tiles[firstPos.y, firstPos.x] = _tiles[secondPos.y, secondPos.x];
+        _tiles[secondPos.y, secondPos.x] = tempTile;
     }
 
     public void DestroyTiles(List<Vector2Int> tilesToDestroy)
     {
         foreach (var tile in tilesToDestroy)
         {
-            Destroy(_tiles[tile.x, tile.y].gameObject);
-            _tiles[tile.x, tile.y] = null;
+            if (_tiles[tile.y, tile.x] == null) continue;
+            
+            Destroy(_tiles[tile.y, tile.x].gameObject);
+            _tiles[tile.y, tile.x] = null;
         }
     }
 

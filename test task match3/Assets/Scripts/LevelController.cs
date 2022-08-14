@@ -35,16 +35,16 @@ public class LevelController : MonoBehaviour
    
    private void OnFieldGenerated(int[,] field, int width, int height)
    {
-      Tile[,] tiles = new Tile[width, height];
+      Tile[,] tiles = new Tile[height, width];
       
-      for (int x = 0; x < width; x++)
+      for (int y = 0; y < height; y++)
       {
-         for (int y = 0; y < height; y++)
+         for (int x = 0; x < width; x++)
          {
             Tile newTile = Instantiate(tilePrefab);
             
             newTile.tileSelected += SwapTiles;
-            tiles[x, y] = newTile;
+            tiles[y, x] = newTile;
          }
       }
       view.SetTilesPosition(tiles);
@@ -68,9 +68,12 @@ public class LevelController : MonoBehaviour
             view.ChangePosition(_selectedTile ,tile);
             model.ChangePosition(_selectedTile.Position, tile.Position);
             
-            bool foundSwipe = model.FindAllMatches();
-            if (!foundSwipe)
+            bool foundMatch = model.FindAllMatches();
+            
+            if (!foundMatch)
             {
+               Debug.Log("no match in this field");
+
                view.ChangePosition(_selectedTile ,tile);
                model.ChangePosition(_selectedTile.Position, tile.Position);
             }
