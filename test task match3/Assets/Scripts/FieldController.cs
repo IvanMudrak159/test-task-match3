@@ -25,9 +25,9 @@ public class FieldController : MonoBehaviour
       view.GenerateFieldEvent += _model.GenerateFieldEvent;
       _model.FieldGeneratedEvent += OnFieldGeneratedEvent;
       _model.MatchFoundEvent += view.DestroyTiles;
-      _model.MatchFoundEvent += SendScore;
       _model.FieldUpdatedEvent += view.UpdateTiles;
       view.FieldUpdatedEvent += _model.FindAllMatches;
+      _model.MatchFoundEvent += SendScore;
    }
 
    private void OnDisable()
@@ -35,9 +35,9 @@ public class FieldController : MonoBehaviour
       view.GenerateFieldEvent -= _model.GenerateFieldEvent;
       _model.FieldGeneratedEvent -= OnFieldGeneratedEvent;
       _model.MatchFoundEvent -= view.DestroyTiles;
-      _model.MatchFoundEvent -= SendScore;
       _model.FieldUpdatedEvent -= view.UpdateTiles;
       view.FieldUpdatedEvent -= _model.FindAllMatches;
+      _model.MatchFoundEvent -= SendScore;
    }
    
    private void OnFieldGeneratedEvent(int[,] field, int height, int width)

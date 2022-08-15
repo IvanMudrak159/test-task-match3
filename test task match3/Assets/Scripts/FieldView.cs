@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class FieldView : MonoBehaviour
@@ -78,7 +79,6 @@ public class FieldView : MonoBehaviour
     public void UpdateTiles(int[,] field)
     {
         StartCoroutine(FindNullTilesRoutine(field));
-        
     }
     
     private IEnumerator FindNullTilesRoutine(int[,] field)

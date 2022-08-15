@@ -138,14 +138,7 @@ public class FieldModel
         bool xInside = tile.x >= 0 && tile.x < _width;
         return xInside && yInside;
     }
-    
-    private bool IsInside(int x, int y)
-    {
-        bool yInside = y >= 0 && y < _height;
-        bool xInside = x >= 0 && x < _width;
-        return xInside && yInside;
-    }
-    
+
     private void DestroyTiles(List<Vector2Int> tilesToDestroy)
     {
         foreach (var tile in tilesToDestroy)
@@ -156,13 +149,16 @@ public class FieldModel
 
     private void ShiftDownTiles()
     {
-        for (int y = 0; y < _height; y++)
+        for (int x = 0; x < _width; x++)
         {
-            for (int x = 0; x < _width; x++)
+            for (int y = 0; y < _height; y++)
             {
-                if (_field[y, x] == -1)
+                if(_field[y,x ] == -1) continue;
+                int depth = GetDepth(y, x);
+                if (depth != 0)
                 {
-                    GetDown(y, x, GetDepth(y, x));
+                    _field[y - depth, x] = _field[y, x];
+                    _field[y, x] = -1;
                 }
             }
         }
@@ -171,29 +167,14 @@ public class FieldModel
     private int GetDepth(int y, int x)
     {
         int depth = 0;
-        for (int i = y; i < _height; i++)
+        for (int i = y - 1; i >= 0; i--)
         {
-            if (_field[i, x] == -1)
-            {
-                depth += 1;
-            }
+            if(_field[i, x] != -1) break;
+            depth += 1;
         }
         return depth;
     }
 
-    private void GetDown(int y, int x, int depth)
-    {
-        for (int i = y; i < _height; i++)
-        {
-            if (!IsInside(x, i + depth))
-            {
-                _field[i, x] = -1;
-                continue;
-            }
-            _field[i, x] = _field[i + depth, x];
-        }
-    }
-    
     private void GenerateTiles()
     {
         for (int y = 0; y < _height; y++)
