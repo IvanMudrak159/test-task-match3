@@ -1,21 +1,23 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Transactions;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class LevelModel
+public class BoardModel
 {
     private int[,] _field;
     private int _width, _height;
     private int[] _icons;
     
-    public delegate void FieldGenerated(int[,] field, int width, int height);
+    public delegate void FieldGenerated(int[,] field, int height, int width);
     public event FieldGenerated fieldGenerated;
 
     public delegate void MatchFound(List<Vector2Int> matchedTiles);
-
     public event MatchFound matchFound;
+
+    public delegate void FieldUpdated(int[,] field);
+    public event FieldUpdated fieldUpdated;
     
     public void GenerateField(int width, int height, int iconLength)
     {
@@ -39,7 +41,7 @@ public class LevelModel
                 previousBelow[x] = _field[y, x];
             }
         }
-        fieldGenerated?.Invoke(_field, _width, _height);
+        fieldGenerated?.Invoke(_field, _height, _width);
     }
 
     public void ChangePosition(Vector2Int firstPos, Vector2Int secondPos)
@@ -58,7 +60,6 @@ public class LevelModel
             {
                 if (_field[y, x] == -1)
                 {
-                    //TODO: change -1 positions with other values, can swipe without match
                     foundMatch = true;
                     continue;
                 }
@@ -67,6 +68,12 @@ public class LevelModel
             }
         }
 
+        if (foundMatch)
+        {
+            ShiftDownTiles();
+            GenerateTiles();
+        }
+        
         return foundMatch;
     }
 
@@ -133,6 +140,13 @@ public class LevelModel
         return xInside && yInside;
     }
     
+    private bool IsInside(int x, int y)
+    {
+        bool yInside = y >= 0 && y < _height;
+        bool xInside = x >= 0 && x < _width;
+        return xInside && yInside;
+    }
+    
     private void DestroyTiles(List<Vector2Int> tilesToDestroy)
     {
         foreach (var tile in tilesToDestroy)
@@ -141,9 +155,60 @@ public class LevelModel
         }
     }
 
+    private void ShiftDownTiles()
+    {
+        for (int y = 0; y < _height; y++)
+        {
+            for (int x = 0; x < _width; x++)
+            {
+                if (_field[y, x] == -1)
+                {
+                    GetDown(y, x, GetDepth(y, x));
+                }
+            }
+        }
+    }
+
+    private int GetDepth(int y, int x)
+    {
+        int depth = 0;
+        for (int i = y; i < _height; i++)
+        {
+            if (_field[i, x] == -1)
+            {
+                depth += 1;
+            }
+        }
+        return depth;
+    }
+
+    private void GetDown(int y, int x, int depth)
+    {
+        for (int i = y; i < _height; i++)
+        {
+            if (!IsInside(x, i + depth))
+            {
+                _field[i, x] = -1;
+                continue;
+            }
+            _field[i, x] = _field[i + depth, x];
+        }
+    }
+    
     private void GenerateTiles()
     {
-        
+        for (int y = 0; y < _height; y++)
+        {
+            for (int x = 0; x < _width; x++)
+            {
+                if (_field[y, x] == -1)
+                {
+                    int iconIndex = Random.Range(0, _icons.Length);
+                    _field[y, x] = _icons[iconIndex];
+                }
+            }
+        }
+        fieldUpdated?.Invoke(_field);
     }
 
     //Debug

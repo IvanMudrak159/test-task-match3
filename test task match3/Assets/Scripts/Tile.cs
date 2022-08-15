@@ -5,10 +5,10 @@ public class Tile : MonoBehaviour
 {
    public SpriteRenderer icon;
    public SpriteRenderer tile;
-   private static Color selectedColor = new Color(.5f, .5f, .5f, 1.0f);
+   private static readonly Color SelectedColor = new Color(.5f, .5f, .5f, 1.0f);
    private bool _isSelected;
 
-   [SerializeField] private Vector2Int _position;
+   private Vector2Int _position;
    public Vector2Int Position => _position;
 
    public delegate void TileSelected(Tile tile);
@@ -24,7 +24,7 @@ public class Tile : MonoBehaviour
    {
       CalculatePosition();
       _isSelected = true;
-      icon.color = selectedColor;
+      icon.color = SelectedColor;
       tileSelected?.Invoke(this);
    }
    

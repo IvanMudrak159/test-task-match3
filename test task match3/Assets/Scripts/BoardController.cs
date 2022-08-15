@@ -1,41 +1,49 @@
 using System;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class LevelController : MonoBehaviour
+public class BoardController : MonoBehaviour
 {
-   
    [SerializeField] private Tile tilePrefab;
-   
    private Tile _selectedTile;
    
-   public LevelModel model;
-   public LevelView view;
+   private BoardModel _model;
+   [SerializeField] private BoardView view;
    
    private Vector2[] _adjacentDirections;
+
+   public delegate void sendScore(int score);
+
+   public static event sendScore SendScoreEvent;
+
    private void Awake()
    {
-      model = new LevelModel();
+      _model = new BoardModel();
       _adjacentDirections = new[] {Vector2.down, Vector2.left, Vector2.right, Vector2.up};
    }
 
    private void OnEnable()
    {
-      view.GameStarted += model.GenerateField;
-      model.fieldGenerated += OnFieldGenerated;
-      model.matchFound += view.DestroyTiles;
-      model.matchFound += view.UpdateScore;
+      view.OnGenerateField += _model.GenerateField;
+      _model.fieldGenerated += OnFieldGenerated;
+      _model.matchFound += view.DestroyTiles;
+      _model.matchFound += SendScore;
+      _model.fieldUpdated += view.UpdateTiles;
+      view.FieldUpdated += _model.FindAllMatches;
    }
 
    private void OnDisable()
    {
-      view.GameStarted -= model.GenerateField;
-      model.fieldGenerated -= OnFieldGenerated;
-      model.matchFound -= view.DestroyTiles;
-      model.matchFound -= view.UpdateScore;
+      view.OnGenerateField -= _model.GenerateField;
+      _model.fieldGenerated -= OnFieldGenerated;
+      _model.matchFound -= view.DestroyTiles;
+      _model.matchFound -= SendScore;
+      _model.fieldUpdated -= view.UpdateTiles;
+      view.FieldUpdated -= _model.FindAllMatches;
    }
    
-   private void OnFieldGenerated(int[,] field, int width, int height)
+   private void OnFieldGenerated(int[,] field, int height, int width)
    {
       Tile[,] tiles = new Tile[height, width];
       
@@ -68,14 +76,14 @@ public class LevelController : MonoBehaviour
          if (IsAdjacent(tile))
          {
             view.ChangePosition(_selectedTile ,tile);
-            model.ChangePosition(_selectedTile.Position, tile.Position);
+            _model.ChangePosition(_selectedTile.Position, tile.Position);
             
-            bool foundMatch = model.FindAllMatches();
+            bool foundMatch = _model.FindAllMatches();
             
             if (!foundMatch)
             {
                view.ChangePosition(_selectedTile ,tile);
-               model.ChangePosition(_selectedTile.Position, tile.Position);
+               _model.ChangePosition(_selectedTile.Position, tile.Position);
             }
          }
          _selectedTile.UpdateInfo();
@@ -98,14 +106,9 @@ public class LevelController : MonoBehaviour
       }
       return isAdjacent;
    }
-   
-   private void DestroyTiles()
-   {
-        
-   }
 
-   private void GenerateTiles()
+   private void SendScore(List<Vector2Int> matchedTiles)
    {
-        
+      SendScoreEvent?.Invoke(matchedTiles.Count * 100);
    }
 }
