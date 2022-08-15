@@ -1,49 +1,46 @@
-using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
-public class BoardController : MonoBehaviour
+public class FieldController : MonoBehaviour
 {
    [SerializeField] private Tile tilePrefab;
    private Tile _selectedTile;
    
-   private BoardModel _model;
-   [SerializeField] private BoardView view;
+   private FieldModel _model;
+   [SerializeField] private FieldView view;
    
    private Vector2[] _adjacentDirections;
 
-   public delegate void sendScore(int score);
-
-   public static event sendScore SendScoreEvent;
+   public delegate void SendScoreHandler(int score);
+   public static event SendScoreHandler SendScoreEvent;
 
    private void Awake()
    {
-      _model = new BoardModel();
+      _model = new FieldModel();
       _adjacentDirections = new[] {Vector2.down, Vector2.left, Vector2.right, Vector2.up};
    }
 
    private void OnEnable()
    {
-      view.OnGenerateField += _model.GenerateField;
-      _model.fieldGenerated += OnFieldGenerated;
-      _model.matchFound += view.DestroyTiles;
-      _model.matchFound += SendScore;
-      _model.fieldUpdated += view.UpdateTiles;
-      view.FieldUpdated += _model.FindAllMatches;
+      view.GenerateFieldEvent += _model.GenerateFieldEvent;
+      _model.FieldGeneratedEvent += OnFieldGeneratedEvent;
+      _model.MatchFoundEvent += view.DestroyTiles;
+      _model.MatchFoundEvent += SendScore;
+      _model.FieldUpdatedEvent += view.UpdateTiles;
+      view.FieldUpdatedEvent += _model.FindAllMatches;
    }
 
    private void OnDisable()
    {
-      view.OnGenerateField -= _model.GenerateField;
-      _model.fieldGenerated -= OnFieldGenerated;
-      _model.matchFound -= view.DestroyTiles;
-      _model.matchFound -= SendScore;
-      _model.fieldUpdated -= view.UpdateTiles;
-      view.FieldUpdated -= _model.FindAllMatches;
+      view.GenerateFieldEvent -= _model.GenerateFieldEvent;
+      _model.FieldGeneratedEvent -= OnFieldGeneratedEvent;
+      _model.MatchFoundEvent -= view.DestroyTiles;
+      _model.MatchFoundEvent -= SendScore;
+      _model.FieldUpdatedEvent -= view.UpdateTiles;
+      view.FieldUpdatedEvent -= _model.FindAllMatches;
    }
    
-   private void OnFieldGenerated(int[,] field, int height, int width)
+   private void OnFieldGeneratedEvent(int[,] field, int height, int width)
    {
       Tile[,] tiles = new Tile[height, width];
       
@@ -75,14 +72,14 @@ public class BoardController : MonoBehaviour
       {
          if (IsAdjacent(tile))
          {
-            view.ChangePosition(_selectedTile ,tile);
+            view.SwapTiles(_selectedTile ,tile);
             _model.ChangePosition(_selectedTile.Position, tile.Position);
             
             bool foundMatch = _model.FindAllMatches();
             
             if (!foundMatch)
             {
-               view.ChangePosition(_selectedTile ,tile);
+               view.SwapTiles(_selectedTile ,tile);
                _model.ChangePosition(_selectedTile.Position, tile.Position);
             }
          }

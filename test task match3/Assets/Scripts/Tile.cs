@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
@@ -12,11 +11,10 @@ public class Tile : MonoBehaviour
    public Vector2Int Position => _position;
 
    public delegate void TileSelected(Tile tile);
-
    public event TileSelected tileSelected;
+   
    private void Start()
    {
-      //fix later: can be called before LevelView exe SetTilesPosition()
       CalculatePosition();
    }
 
@@ -25,7 +23,6 @@ public class Tile : MonoBehaviour
       CalculatePosition();
       _isSelected = true;
       icon.color = SelectedColor;
-      tileSelected?.Invoke(this);
    }
    
    private void Deselect()
@@ -60,5 +57,6 @@ public class Tile : MonoBehaviour
       {
          Select();
       }
+      tileSelected?.Invoke(this);
    }
 }

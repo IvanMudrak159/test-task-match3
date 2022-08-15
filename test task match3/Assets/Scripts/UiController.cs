@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,12 +8,12 @@ public class UiController : MonoBehaviour
 
    private void OnEnable()
    {
-      BoardController.SendScoreEvent += DisplayScore;
+      FieldController.SendScoreEvent += DisplayScore;
    }
 
    private void OnDisable()
    {
-      BoardController.SendScoreEvent -= DisplayScore;
+      FieldController.SendScoreEvent -= DisplayScore;
    }
 
    private void DisplayScore(int score)

@@ -1,26 +1,23 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoardView : MonoBehaviour
+public class FieldView : MonoBehaviour
 {
     private Tile[,] _tiles;
     [SerializeField] private int width, height;
     [SerializeField] private Sprite[] iconSprites;
     [SerializeField] private float shiftDelay;
 
-    public delegate void GenerateField(int height, int width, int iconLength);
+    public delegate void GenerateFieldHandler(int height, int width, int iconLength);
+    public event GenerateFieldHandler GenerateFieldEvent;
 
-    public event GenerateField OnGenerateField;
-
-    public delegate bool fieldUpdated();
-
-    public event fieldUpdated FieldUpdated;
+    public delegate bool FieldUpdatedHandler();
+    public event FieldUpdatedHandler FieldUpdatedEvent;
 
     private void Start()
     {
-        OnGenerateField?.Invoke(height, width, iconSprites.Length);
+        GenerateFieldEvent?.Invoke(height, width, iconSprites.Length);
     }
 
     public void SetTilesPosition(Tile[,] tiles)
@@ -54,7 +51,7 @@ public class BoardView : MonoBehaviour
         }
     }
     
-    public void ChangePosition(Tile firstTile, Tile secondTile)
+    public void SwapTiles(Tile firstTile, Tile secondTile)
     {
         Vector2 tempPos = firstTile.transform.position;
         firstTile.transform.position = secondTile.transform.position;
@@ -72,7 +69,7 @@ public class BoardView : MonoBehaviour
     {
         foreach (var tile in tilesToDestroy)
         {
-            if (IsNull(tile.y, tile.x)) continue;
+            if (IsNullTile(tile.y, tile.x)) continue;
 
             _tiles[tile.y, tile.x].icon.sprite = null;
         }
@@ -80,23 +77,23 @@ public class BoardView : MonoBehaviour
 
     public void UpdateTiles(int[,] field)
     {
-        StartCoroutine(FindNullTiles(field));
+        StartCoroutine(FindNullTilesRoutine(field));
         
     }
     
-    private IEnumerator FindNullTiles(int[,] field)
+    private IEnumerator FindNullTilesRoutine(int[,] field)
     {
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
-                if (IsNull(y, x))
+                if (IsNullTile(y, x))
                 {
-                    yield return StartCoroutine(ShiftDownTiles(y, x, field, shiftDelay));
+                    yield return StartCoroutine(ShiftDownTilesRoutine(y, x, field, shiftDelay));
                 }
             }
         }
-        FieldUpdated?.Invoke();
+        FieldUpdatedEvent?.Invoke();
     }
 
     private int GetDepth(int y, int x)
@@ -104,7 +101,7 @@ public class BoardView : MonoBehaviour
         int depth = 0;
         for (int i = y; i < height; i++)
         {
-            if (IsNull(i, x))
+            if (IsNullTile(i, x))
             {
                 depth += 1;
             }
@@ -112,7 +109,7 @@ public class BoardView : MonoBehaviour
         return depth;
     }
 
-    private IEnumerator ShiftDownTiles(int y, int x, int[,] field, float shiftDelay)
+    private IEnumerator ShiftDownTilesRoutine(int y, int x, int[,] field, float shiftDelay)
     {
         WaitForSeconds delay = new WaitForSeconds(shiftDelay);
 
@@ -139,8 +136,7 @@ public class BoardView : MonoBehaviour
         }
     }
 
-
-    private bool IsNull(int y, int x)
+    private bool IsNullTile(int y, int x)
     {
         if (_tiles[y, x].icon.sprite == null) return true;
         return false;

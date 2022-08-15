@@ -7,10 +7,9 @@
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
-          <e p="ArrayDirection.cs" t="Include" />
-          <e p="BoardController.cs" t="Include" />
-          <e p="BoardModel.cs" t="Include" />
-          <e p="BoardView.cs" t="Include" />
+          <e p="FieldController.cs" t="Include" />
+          <e p="FieldModel.cs" t="Include" />
+          <e p="FieldView.cs" t="Include" />
           <e p="Tile.cs" t="Include" />
           <e p="UiController.cs" t="Include" />
         </e>

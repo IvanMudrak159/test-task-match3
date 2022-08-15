@@ -1,25 +1,24 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class BoardModel
+public class FieldModel
 {
     private int[,] _field;
     private int _width, _height;
     private int[] _icons;
     
-    public delegate void FieldGenerated(int[,] field, int height, int width);
-    public event FieldGenerated fieldGenerated;
+    public delegate void FieldGenerateHandler(int[,] field, int height, int width);
+    public event FieldGenerateHandler FieldGeneratedEvent;
 
-    public delegate void MatchFound(List<Vector2Int> matchedTiles);
-    public event MatchFound matchFound;
+    public delegate void MatchFoundHandler(List<Vector2Int> matchedTiles);
+    public event MatchFoundHandler MatchFoundEvent;
 
-    public delegate void FieldUpdated(int[,] field);
-    public event FieldUpdated fieldUpdated;
+    public delegate void FieldUpdatedHandler(int[,] field);
+    public event FieldUpdatedHandler FieldUpdatedEvent;
     
-    public void GenerateField(int width, int height, int iconLength)
+    public void GenerateFieldEvent(int width, int height, int iconLength)
     {
         _width = width;
         _height = height;
@@ -41,7 +40,7 @@ public class BoardModel
                 previousBelow[x] = _field[y, x];
             }
         }
-        fieldGenerated?.Invoke(_field, _height, _width);
+        FieldGeneratedEvent?.Invoke(_field, _height, _width);
     }
 
     public void ChangePosition(Vector2Int firstPos, Vector2Int secondPos)
@@ -63,8 +62,8 @@ public class BoardModel
                     foundMatch = true;
                     continue;
                 }
-                FindMatch(y, x, ArrayDirection.Up, true);
-                FindMatch(y, x, ArrayDirection.Right, true);
+                FindMatch(y, x, Vector2Int.up, true);
+                FindMatch(y, x, Vector2Int.right, true);
             }
         }
 
@@ -97,12 +96,12 @@ public class BoardModel
 
         if (matchingTiles.Count > 2)
         {
-            if (direction == ArrayDirection.Up)
+            if (direction == Vector2Int.up)
             {
                 foreach (var tile in matchingTiles)
                 {
-                    List<Vector2Int> rightMatch = FindMatch(tile.y, tile.x, ArrayDirection.Right, false);
-                    List<Vector2Int> leftMatch = FindMatch(tile.y, tile.x, ArrayDirection.Left, false);
+                    List<Vector2Int> rightMatch = FindMatch(tile.y, tile.x, Vector2Int.right, false);
+                    List<Vector2Int> leftMatch = FindMatch(tile.y, tile.x, Vector2Int.left, false);
                     if (rightMatch.Count + leftMatch.Count > 3)
                     {
                         rightMatch.Remove(tile);
@@ -113,11 +112,11 @@ public class BoardModel
                     }
                 }
             }
-            else if (direction == ArrayDirection.Right)
+            else if (direction == Vector2Int.right)
             {
                 foreach (var tile in matchingTiles)
                 {
-                    List<Vector2Int> upMatch = FindMatch(tile.y, tile.x, ArrayDirection.Up, false);
+                    List<Vector2Int> upMatch = FindMatch(tile.y, tile.x, Vector2Int.up, false);
                     if (upMatch.Count > 2)
                     {
                         upMatch.Remove(tile);
@@ -127,7 +126,7 @@ public class BoardModel
                 }
             }
             DestroyTiles(matchingTiles);
-            matchFound?.Invoke(matchingTiles);
+            MatchFoundEvent?.Invoke(matchingTiles);
             
         }
         return new List<Vector2Int>();
@@ -208,7 +207,7 @@ public class BoardModel
                 }
             }
         }
-        fieldUpdated?.Invoke(_field);
+        FieldUpdatedEvent?.Invoke(_field);
     }
 
     //Debug
